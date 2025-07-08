@@ -1,4 +1,6 @@
 using System;
+using System.Text.Json.Serialization;
+
 namespace SmartTaskApp.Models;
 
 public enum TaskStatus
@@ -12,15 +14,19 @@ public class TaskItem
 {
 
     private static int _nextId = 1;
-    public int Id { get; }   
-    public string Title { get; set; }
+    public int Id { get; set; }
+    public string? Title { get; set; }
     public TaskStatus Status { get; set; } = TaskStatus.Pending;
     public DateTime CreatedAt { get; } = DateTime.Now;
+    
+    public TaskItem() { } //for json serialization
 
     public TaskItem(string title)
     {
         Title = title ?? throw new ArgumentNullException(nameof(title));
-        Id = _nextId++; 
+        Id = _nextId++;
+        Status = TaskStatus.Pending;
+        CreatedAt = DateTime.Now;
     }
 
     public TaskItem(int id, string title, TaskStatus status = TaskStatus.Pending)
