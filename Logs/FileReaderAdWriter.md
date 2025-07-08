@@ -61,3 +61,35 @@ using var writer = new StreamWriter(filePath);
 
 writer.WriteLine($"");
 ```
+
+#### JSON
+
+When it comes to json
+
+1. emtpy constructor to enable deserialize 
+
+```csharp
+ public TaskItem() { } //for json serialization
+```
+
+1. taskItem id when add, will
+
+```csharp
+if (tasks.Count>0&&tasks.Any(t => t.Id==task.Id) )
+{
+    task.Id = GetMaxId() + 1;
+}
+```
+
+1. switch extension
+
+```csharp
+var ext = Path.GetExtension(filePath).ToLower();
+return ext switch
+{
+    ".txt" or ".csv" => LoadFromTxt(filePath),
+    ".json" => LoadFromJson(filePath),
+    _ => throw new NotSupportedException($"Unsupported file type: {ext}")
+};
+
+```

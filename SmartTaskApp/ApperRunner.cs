@@ -23,7 +23,7 @@ public class AppRunner
         {
             string content = $"Task completed: {e.Task.Title} (Created at {e.Task.CreatedAt:t})";
             Console.WriteLine(content);
-            Logger.Write(content,logFilePath);
+            Logger.Write(content, logFilePath);
         };
 
         notifier.TaskAdded += (sender, e) =>
@@ -31,20 +31,22 @@ public class AppRunner
             string content = $"Task added: {e.Task.Title} (at {e.AddedAt:t})";
 
             Console.WriteLine(content);
-            Logger.Write(content,logFilePath);
+            Logger.Write(content, logFilePath);
         };
 
         notifier.TaskRemoved += (sender, e) =>
         {
             string content = $"Task removed: {e.Task.Title} (by {e.RemovedBy})";
             Console.WriteLine(content);
-            Logger.Write(content,logFilePath);
+            Logger.Write(content, logFilePath);
         };
     }
 
     public void Run()
-    {   // path read from AppContext.BaseDirectory → bin/Debug/net8.0/, so have to go up 3 levels to reach the Assets folder
-        var path = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Assets", "tasks.txt");
+    {
+        var fileName = "tasks.json";//tasks.txt or tasks.csv
+        // path read from AppContext.BaseDirectory → bin/Debug/net8.0/, so have to go up 3 levels to reach the Assets folder
+        var path = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Assets", fileName);
         // Get the absolute path to the tasks.txt file
         var fullPath = Path.GetFullPath(path);
         var preloadedTasks = Utils.FileReader.LoadTasks(fullPath);

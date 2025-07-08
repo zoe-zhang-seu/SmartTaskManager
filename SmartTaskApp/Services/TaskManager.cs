@@ -11,6 +11,12 @@ public class TaskManager<T> where T : TaskItem
     {
         if (string.IsNullOrWhiteSpace(task.Title))
             throw new ArgumentException("title cannot be null or empty", nameof(task.Title));
+        
+        if (tasks.Count>0&&tasks.Any(t => t.Id==task.Id) )
+        {
+            task.Id = GetMaxId() + 1;
+        }
+
         tasks.Add(task);
     }
 
@@ -33,11 +39,16 @@ public class TaskManager<T> where T : TaskItem
         return tasks;
     }
 
+    public int GetMaxId()
+    {
+        return tasks.Any() ? tasks.Max(t => t.Id) : 0;
+    }
+
     public T this[int index] => tasks[index];// Indexer to access tasks by index
                                              // to aovid write like manager.GetAll().ToList()[1]; 
-    // public T this[int index]
-    // {
-    //     get { return tasks[index]; }
-    // }
+                                             // public T this[int index]
+                                             // {
+                                             //     get { return tasks[index]; }
+                                             // }
     public int Count => tasks.Count; // Property to get the number of tasks
 }
