@@ -1,5 +1,4 @@
 # SmartTaskManager
-# 🧠 SmartTaskManager
 
 A lightweight console-based task manager built with C#.  
 Supports adding, completing, and deleting tasks — with live event notifications.
@@ -8,17 +7,17 @@ Supports adding, completing, and deleting tasks — with live event notification
 
 ---
 
-## ✨ Features
+## Features
 
-- ✅ Add new tasks with a title
-- 📋 View all tasks or just completed ones
-- ✅ Mark tasks as completed
-- 🗑️ Delete tasks by task number (ID)
-- 🔔 Real-time notifications using event handlers
+- Add new tasks with a title
+- View all tasks or just completed ones
+- Mark tasks as completed
+- Delete tasks by task number (ID)
+- Real-time notifications using event handlers
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone the repository
 
