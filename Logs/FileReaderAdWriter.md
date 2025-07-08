@@ -81,7 +81,7 @@ if (tasks.Count>0&&tasks.Any(t => t.Id==task.Id) )
 }
 ```
 
-1. switch extension
+1. switch extensiong
 
 ```csharp
 var ext = Path.GetExtension(filePath).ToLower();
