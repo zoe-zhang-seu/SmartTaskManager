@@ -44,7 +44,7 @@ while (true)
         {
             case "1":
                 Console.Write("Enter task title: ");
-                string? title = Console.ReadLine();
+                string? title = Console.ReadLine()?.Trim();
                 if (string.IsNullOrWhiteSpace(title))
                     throw new ArgumentException("Task title cannot be empty.");
 
@@ -66,9 +66,10 @@ while (true)
                 break;
 
             case "4":
-                Console.Write("Enter the title of the task to complete: ");
-                string? completeTitle = Console.ReadLine();
-                var taskToComplete = taskManager.GetAll().FirstOrDefault(t => t.Title == completeTitle);
+                Console.Write("Enter the ID of the task to complete: ");
+                if (!int.TryParse(Console.ReadLine(), out int completeId))
+                    throw new ArgumentException("Invalid task ID.");
+                var taskToComplete = taskManager.GetAll().FirstOrDefault(t => t.Id == completeId);
                 if (taskToComplete == null)
                     throw new InvalidOperationException("Task not found.");
                 taskToComplete.Status = SmartTaskApp.Models.TaskStatus.Completed;
@@ -76,12 +77,14 @@ while (true)
                 break;
 
             case "5":
-                Console.Write("Enter the title of the task to delete: ");
-                string? deleteTitle = Console.ReadLine();
-                var taskToDelete = taskManager.GetAll().FirstOrDefault(t => t.Title == deleteTitle);
+                Console.Write("Enter the ID of the task to delete: ");
+                if (!int.TryParse(Console.ReadLine(), out int deleteId))
+                    throw new ArgumentException("Invalid task ID.");
+
+                var taskToDelete = taskManager.GetAll().FirstOrDefault(t => t.Id == deleteId);
                 if (taskToDelete == null)
                     throw new InvalidOperationException("Task not found.");
-                taskManager.Remove(deleteTitle!);
+                taskManager.Remove(taskToDelete.Title!);
                 notifier.NotifyRemoved(taskToDelete);
                 break;
 

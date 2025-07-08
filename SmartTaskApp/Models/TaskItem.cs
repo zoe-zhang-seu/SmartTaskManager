@@ -10,6 +10,9 @@ public enum TaskStatus
 
 public class TaskItem
 {
+
+    private static int _nextId = 1;
+    public int Id { get; }   
     public string Title { get; set; }
     public TaskStatus Status { get; set; } = TaskStatus.Pending;
     public DateTime CreatedAt { get; } = DateTime.Now;
@@ -17,11 +20,12 @@ public class TaskItem
     public TaskItem(string title)
     {
         Title = title ?? throw new ArgumentNullException(nameof(title));
+        Id = _nextId++; 
     }
 
     public override string ToString()
     {
-        return $"{Title} [{Status}] created {CreatedAt:t}";// Format: "Title [Status] created HH:mm"
+        return $"{Id}. {Title} [{Status}] created {CreatedAt:t}";// Format: "Title [Status] created HH:mm"
     }
 
     public void UpdateStatus(TaskStatus newStatus)
