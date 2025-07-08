@@ -1,6 +1,8 @@
 using SmartTaskApp.Models;
 using SmartTaskApp.Services;
 using SmartTaskApp.Events;
+using SmartTaskApp.Utils;
+using System.Net.Mime;
 
 namespace SmartTaskApp;
 
@@ -9,28 +11,49 @@ public class AppRunner
     private readonly TaskManager<TaskItem> taskManager = new();
     private readonly TaskNotifier notifier = new();
 
+    private readonly string taskFilePath;
+    private readonly string logFilePath;
     public AppRunner()
     {
+        taskFilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Assets", "tasks.txt"));
+        logFilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Assets", "log.txt"));
 
         // Subscribe to events
         notifier.TaskCompleted += (sender, e) =>
         {
-            Console.WriteLine($"Task completed: {e.Task.Title} (Created at {e.Task.CreatedAt:t})");
+            string content = $"Task completed: {e.Task.Title} (Created at {e.Task.CreatedAt:t})";
+            Console.WriteLine(content);
+            Logger.Write(content,logFilePath);
         };
 
         notifier.TaskAdded += (sender, e) =>
         {
-            Console.WriteLine($"Task added: {e.Task.Title} (at {e.AddedAt:t})");
+            string content = $"Task added: {e.Task.Title} (at {e.AddedAt:t})";
+
+            Console.WriteLine(content);
+            Logger.Write(content,logFilePath);
         };
 
         notifier.TaskRemoved += (sender, e) =>
         {
-            Console.WriteLine($"Task removed: {e.Task.Title} (by {e.RemovedBy})");
+            string content = $"Task removed: {e.Task.Title} (by {e.RemovedBy})";
+            Console.WriteLine(content);
+            Logger.Write(content,logFilePath);
         };
     }
 
     public void Run()
-    {
+    {   // path read from AppContext.BaseDirectory → bin/Debug/net8.0/, so have to go up 3 levels to reach the Assets folder
+        var path = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Assets", "tasks.txt");
+        // Get the absolute path to the tasks.txt file
+        var fullPath = Path.GetFullPath(path);
+        var preloadedTasks = Utils.FileReader.LoadTasks(fullPath);
+
+        foreach (var task in preloadedTasks)
+        {
+            taskManager.Add(task);
+        }
+
         while (true)
         {
             Console.WriteLine("\n========== SmartTask ==========");
@@ -56,6 +79,7 @@ public class AppRunner
                             throw new ArgumentException("Task title cannot be empty.");
                         var task = new TaskItem(title);
                         taskManager.Add(task);
+                        FileReader.SaveTasks(taskManager.GetAll(), fullPath);
                         notifier.NotifyAdded(task);
                         break;
 
@@ -90,6 +114,7 @@ public class AppRunner
                         if (taskToDelete == null)
                             throw new InvalidOperationException("Task not found.");
                         taskManager.Remove(taskToDelete.Title!);
+                        FileReader.SaveTasks(taskManager.GetAll(), fullPath);
                         notifier.NotifyRemoved(taskToDelete);
                         break;
 

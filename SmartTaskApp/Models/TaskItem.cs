@@ -23,6 +23,16 @@ public class TaskItem
         Id = _nextId++; 
     }
 
+    public TaskItem(int id, string title, TaskStatus status = TaskStatus.Pending)
+    {
+        Title = title ?? throw new ArgumentNullException(nameof(title));
+        Id = id;
+        Status = status;
+        CreatedAt = DateTime.Now;
+        if (id >= _nextId)
+         _nextId = id + 1; // Ensure next ID is always greater than the highest existing ID
+    }
+
     public override string ToString()
     {
         return $"{Id}. {Title} [{Status}] created {CreatedAt:t}";// Format: "Title [Status] created HH:mm"
