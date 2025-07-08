@@ -2,13 +2,13 @@
 
 This document explains how events are used and flow throughout the SmartTaskApp project. It focuses on the usage of C# `event` keyword, especially how `TaskAdded`, `TaskRemoved`, and `TaskCompleted` are defined, triggered, and handled across the application.
 
----
+
 
 ## Overview
 
 In this project, we use **C# events** to decouple the logic of task state changes (like adding, removing, completing tasks) from how we respond to those changes (e.g., logging, UI updates). The observer (subscriber) pattern enables cleaner and more modular code.
 
----
+ 
 
 ## Project Structure
 
@@ -24,7 +24,7 @@ SmartTaskApp/
 └── README.md
 ```
 
----
+ 
 
 ## Event Definitions (`TaskNotifier.cs`)
 
@@ -36,7 +36,7 @@ public event EventHandler<TaskEventArgs>? TaskCompleted;
 
 These are the **public events** declared inside the `TaskNotifier` class. External components can subscribe to these events but cannot trigger them.
 
----
+ 
 
 ## 🎯 Event Arguments Classes
 
@@ -46,7 +46,7 @@ Each event type uses a specific `EventArgs` subclass to encapsulate data related
 - `TaskRemovedEventArgs` – includes the removed task and who removed it
 - `TaskEventArgs` – used for completion events
 
----
+ 
 
 ## Event Triggers (`TaskNotifier.cs`)
 
@@ -72,7 +72,7 @@ public void Notify(TaskItem task)
 
 These methods encapsulate the logic to fire events when something meaningful happens. Other parts of the program call these methods rather than raising events directly.
 
----
+ 
 
 ##  Event Subscriptions (`Program.cs`)
 
@@ -95,7 +95,7 @@ notifier.TaskCompleted += (sender, e) =>
 
 These anonymous functions respond to events. Once an event is raised, the corresponding handler runs.
 
----
+ 
 
 ## Example: Add Task Flow
 
@@ -105,17 +105,17 @@ These anonymous functions respond to events. Once an event is raised, the corres
 4. `TaskAdded` event is fired and handled in the `Program.cs` subscriber.
 5. The console prints a confirmation message.
 
----
+ 
 
 ## Summary of Event Flow
 
 | Action         | Trigger Method         | Event Raised       | Data Passed             | Handled Where         |
-|----------------|------------------------|---------------------|--------------------------|------------------------|
+|     -|        |       |        --|        |
 | Add Task       | `NotifyAdded(task)`    | `TaskAdded`         | `TaskAddedEventArgs`     | `Program.cs`           |
 | Remove Task    | `NotifyRemoved(task)`  | `TaskRemoved`       | `TaskRemovedEventArgs`   | `Program.cs`           |
 | Complete Task  | `Notify(task)`         | `TaskCompleted`     | `TaskEventArgs`          | `Program.cs`           |
 
----
+ 
 
 ## Benefits of Using Events Here
 
