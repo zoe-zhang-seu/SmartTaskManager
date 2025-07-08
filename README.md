@@ -7,7 +7,11 @@ This task is mainly to learn the usage of Event in c# .net
 
 ![Demo](./Logs/demo.gif)
 
----
+## Done tasks
+
+- Event for nofify add, remove
+- file read tasks.txt to seed , then edit the content and record in log.txt
+ 
 
 ## Features
 
@@ -17,7 +21,7 @@ This task is mainly to learn the usage of Event in c# .net
 - Delete tasks by task number (ID)
 - Real-time notifications using event handlers
 
----
+ 
 
 ## Getting Started
 
