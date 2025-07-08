@@ -39,6 +39,11 @@ public class TaskManager<T> where T : TaskItem
         return tasks;
     }
 
+    public IEnumerable<T> Filter(Func<T, bool> predicate)
+    {
+        return tasks.Where(predicate);
+    }
+
     public int GetMaxId()
     {
         return tasks.Any() ? tasks.Max(t => t.Id) : 0;

@@ -9,15 +9,15 @@ namespace SmartTaskApp;
 public class AppRunner
 {
     private readonly TaskManager<TaskItem> taskManager = new();
+    private readonly TaskManager<AdvancedTaskItem> advancedTaskManager = new();
     private readonly TaskNotifier notifier = new();
 
-    private readonly string taskFilePath;
-    private readonly string logFilePath;
+    private readonly string taskFilePath = FileReader.GetAssetPath("tasks.json");//tasks.txt or tasks.csv
+    private readonly string logFilePath = FileReader.GetAssetPath("log.txt");
+    private readonly string advancedFilePath = FileReader.GetAssetPath("advanced_tasks.json");
+
     public AppRunner()
     {
-        taskFilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Assets", "tasks.txt"));
-        logFilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Assets", "log.txt"));
-
         // Subscribe to events
         notifier.TaskCompleted += (sender, e) =>
         {
@@ -44,18 +44,37 @@ public class AppRunner
 
     public void Run()
     {
-        var fileName = "tasks.json";//tasks.txt or tasks.csv
+        LoadInitialTasks();
+        PrintAdvancedSummaries();
+        ShowMainMenu();
+    }
+    public void LoadInitialTasks()
+    {
         // path read from AppContext.BaseDirectory → bin/Debug/net8.0/, so have to go up 3 levels to reach the Assets folder
-        var path = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Assets", fileName);
-        // Get the absolute path to the tasks.txt file
-        var fullPath = Path.GetFullPath(path);
-        var preloadedTasks = Utils.FileReader.LoadTasks(fullPath);
+        var preloadedTasks = Utils.FileReader.LoadTasks(taskFilePath);
 
         foreach (var task in preloadedTasks)
         {
             taskManager.Add(task);
         }
+    }
+    public void PrintAdvancedSummaries()
+    {
+        var advancedTasks = FileReader.LoadAdvancedTasksFromJson(advancedFilePath);
+        foreach (var task in advancedTasks)
+            advancedTaskManager.Add(task);
 
+        Console.WriteLine("=== High Priority Tasks ===");
+        foreach (var task in advancedTaskManager.Filter(t => t.Priority >= 3))
+            Console.WriteLine(task);
+
+        Console.WriteLine("=== Urgent Tasks ===");
+        foreach (var task in advancedTaskManager.Filter(t => t.IsUrgent()))
+            Console.WriteLine("⚠️ " + task.Title);
+    }
+
+    public void ShowMainMenu()
+    {
         while (true)
         {
             Console.WriteLine("\n========== SmartTask ==========");
@@ -81,7 +100,7 @@ public class AppRunner
                             throw new ArgumentException("Task title cannot be empty.");
                         var task = new TaskItem(title);
                         taskManager.Add(task);
-                        FileReader.SaveTasks(taskManager.GetAll(), fullPath);
+                        FileReader.SaveTasks(taskManager.GetAll(), taskFilePath);
                         notifier.NotifyAdded(task);
                         break;
 
@@ -116,7 +135,7 @@ public class AppRunner
                         if (taskToDelete == null)
                             throw new InvalidOperationException("Task not found.");
                         taskManager.Remove(taskToDelete.Title!);
-                        FileReader.SaveTasks(taskManager.GetAll(), fullPath);
+                        FileReader.SaveTasks(taskManager.GetAll(), taskFilePath);
                         notifier.NotifyRemoved(taskToDelete);
                         break;
 

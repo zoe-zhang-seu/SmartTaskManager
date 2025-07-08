@@ -21,6 +21,12 @@ namespace SmartTaskApp.Utils
             };
         }
 
+        public static string GetAssetPath(string fileName) 
+        {
+            var path = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Assets", fileName);
+            // Get the absolute path to the tasks.txt file
+            return Path.GetFullPath(path);
+        }
         public static List<TaskItem> LoadFromTxt(string filePath)
         {
             var tasks = new List<TaskItem>();
@@ -54,10 +60,18 @@ namespace SmartTaskApp.Utils
 
             var json = File.ReadAllText(path);
 
-            return JsonSerializer.Deserialize<List<TaskItem>>(json,options) ?? new();
+            return JsonSerializer.Deserialize<List<TaskItem>>(json, options) ?? new();
         }
 
-
+        public static List<AdvancedTaskItem> LoadAdvancedTasksFromJson(string path)
+        {
+            var json = File.ReadAllText(path);
+            return JsonSerializer.Deserialize<List<AdvancedTaskItem>>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonStringEnumConverter() }//important for enum
+            })!;
+        }
 
         public static void SaveTasks(IEnumerable<TaskItem> tasks, string filePath)
         {
@@ -82,5 +96,7 @@ namespace SmartTaskApp.Utils
                     throw new NotSupportedException($"Unsupported file extension: {ext}");
             }
         }
+        
+        
     }
 }
