@@ -21,6 +21,32 @@ foreach (var line in File.ReadLines(filePath))
 
 ```
 
+#### why not use streamReader
+
+```csharp
+foreach (var line in File.ReadLines(filePath))
+{
+
+}
+
+//vs
+
+using (var reader = new StreamReader(filePath))
+{
+    string? line;
+    while ((line = reader.ReadLine()) != null)
+    {
+        // process each line
+    }
+}
+
+```
+
+Compared to using `StreamReader` directly, `File.ReadLines` is:
+
+-  Simpler and more readable
+-  Automatically manages file resources (no need for a using block)
+-  Supports lazy loading, which is ideal for large files
 
 ### Write
 
