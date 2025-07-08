@@ -12,6 +12,7 @@ This task is mainly to learn the usage of Event in c# .net
 - Event for nofify add, remove
 - file read tasks.txt to seed , then edit the content and record in log.txt
    - also ".csv" ".json" read and write
+- T type extension, create a advanced task item from task item
  
 
 ## Features
