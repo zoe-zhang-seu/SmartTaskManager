@@ -1,0 +1,37 @@
+# Build output
+bin/
+obj/
+out/
+
+# VS Code
+.vscode/
+
+# Rider / JetBrains
+.idea/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# Dotnet CLI artifacts
+artifacts/
+*.dll
+*.exe
+*.cache
+*.log
+*.pdb
+*.tmp
+*.db
+
+# OS generated files
+.DS_Store
+Thumbs.db
