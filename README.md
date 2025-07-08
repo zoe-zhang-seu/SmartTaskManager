@@ -3,6 +3,8 @@
 A lightweight console-based task manager built with C#.  
 Supports adding, completing, and deleting tasks — with live event notifications.
 
+This task is mainly to learn the usage of Event in c# .net
+
 ![Demo](./Logs/demo.gif)
 
 ---
